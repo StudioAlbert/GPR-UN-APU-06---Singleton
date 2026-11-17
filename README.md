@@ -52,6 +52,10 @@ git switch 01-basique
 3. From `Level`, click *Load the HUD scene on top* → a second `AudioManager` arrives, and the
    newcomer is the one that dies.
 
+The score line in `LevelHud` carries the one null test of the whole project. Without it the HUD
+throws sixty times a second and you never get as far as clicking anything. It is exactly the
+defensive code chapter 3 deletes.
+
 ### `02-generique` — the plumbing, written once
 
 `AudioManager` and `ScoreKeeper` are four lines each now. The accessor builds an instance when
