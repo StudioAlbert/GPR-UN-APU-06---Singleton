@@ -6,19 +6,52 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/01 - Scenes/Bootstrap.unity
-    guid: a580a35ba25732649bc5cf623cfadb68
+    path: Assets/01 - Scenes/01 - Basic/01 - Bootstrap.unity
+    guid: d00d81bb845cd1448930b5229edba058
   - enabled: 1
-    path: Assets/01 - Scenes/Menu.unity
-    guid: f224fe3d057f7b24b890b0863d1d7217
+    path: Assets/01 - Scenes/01 - Basic/01 - Level.unity
+    guid: 20f27b978975e7849a8fedfd76141008
   - enabled: 1
-    path: Assets/01 - Scenes/Level.unity
-    guid: 4970fbcba0248554395927aea9a8f828
+    path: Assets/01 - Scenes/01 - Basic/01 - Level 2.unity
+    guid: e24fc9b798bacdc4dbf67c1ae60c2ffe
   - enabled: 1
-    path: Assets/01 - Scenes/Level 2.unity
-    guid: e373e38efafbf0c468e483c66dcce5fd
+    path: Assets/01 - Scenes/01 - Basic/01 - HUD.unity
+    guid: d3bba269674611a4281970c8ee21245c
   - enabled: 1
-    path: Assets/01 - Scenes/HUD.unity
-    guid: 16360734ff325564ab626922a436e404
+    path: Assets/01 - Scenes/02 - Generic/02 - Bootstrap.unity
+    guid: d99ef287c061a0d49b5de571b25dc16e
+  - enabled: 1
+    path: Assets/01 - Scenes/02 - Generic/02 - Level.unity
+    guid: 1ab4decd0bbc6294a84fb145ed85f218
+  - enabled: 1
+    path: Assets/01 - Scenes/02 - Generic/02 - Level 2.unity
+    guid: 571c45f0063ee8842970b0b561f7f510
+  - enabled: 1
+    path: Assets/01 - Scenes/02 - Generic/02 - HUD.unity
+    guid: 2c1b51feb7f93334c996f2bcffda922e
+  - enabled: 1
+    path: Assets/01 - Scenes/03 - Null object/03 - Bootstrap.unity
+    guid: 34e8a19dad7b0c041af39a7cfa0cbd46
+  - enabled: 1
+    path: Assets/01 - Scenes/03 - Null object/03 - Level.unity
+    guid: 6e7cf609fcf1cc24384a6c430248c80d
+  - enabled: 1
+    path: Assets/01 - Scenes/03 - Null object/03 - Level 2.unity
+    guid: ff4041f7e1df99341a5226773bc4c0e6
+  - enabled: 1
+    path: Assets/01 - Scenes/03 - Null object/03 - HUD.unity
+    guid: cf342ccc489c0a144a25eaef91e2e9ec
+  - enabled: 1
+    path: Assets/01 - Scenes/04 - Persistent/04 - Bootstrap.unity
+    guid: 615dd906204d0874784390a7b7cdf52a
+  - enabled: 1
+    path: Assets/01 - Scenes/04 - Persistent/04 - Level.unity
+    guid: 89796fcc8faa43c43bb5f05f87943546
+  - enabled: 1
+    path: Assets/01 - Scenes/04 - Persistent/04 - Level 2.unity
+    guid: afbaa5b136f993946b1a16492e839df1
+  - enabled: 1
+    path: Assets/01 - Scenes/04 - Persistent/04 - HUD.unity
+    guid: 0309017849e72f64da3e63bbe6cc27f6
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}

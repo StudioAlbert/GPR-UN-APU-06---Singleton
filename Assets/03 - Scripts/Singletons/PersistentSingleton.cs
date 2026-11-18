@@ -1,48 +1,51 @@
 using UnityEngine;
 
-/// <summary>
-/// Survives a scene change. DontDestroyOnLoad only works on a root object, hence
-/// the unparenting. Here the first instance wins and later ones are destroyed.
-/// After Adam Myhre, adammyhre/Unity-Utils.
-/// </summary>
-public class PersistentSingleton<T> : MonoBehaviour where T : Component
+namespace Singletons
 {
-    [SerializeField] private bool autoUnparentOnAwake = true;
-
-    protected static T instance;
-
-    public static bool HasInstance => instance != null;
-
-    public static T Instance
+    /// <summary>
+    /// Survives a scene change. DontDestroyOnLoad only moves a root object,
+    /// hence the unparenting. Here the first instance wins and later ones are
+    /// destroyed. After Adam Myhre, adammyhre/Unity-Utils.
+    /// </summary>
+    public class PersistentSingleton<T> : MonoBehaviour where T : Component
     {
-        get
-        {
-            if (instance != null) return instance;
+        [SerializeField] private bool autoUnparentOnAwake = true;
 
-            instance = FindAnyObjectByType<T>();
+        protected static T instance;
+
+        public static bool HasInstance => instance != null;
+
+        public static T Instance
+        {
+            get
+            {
+                if (instance != null) return instance;
+
+                instance = FindAnyObjectByType<T>();
+                if (instance == null)
+                {
+                    var go = new GameObject(typeof(T).Name + " Auto-Generated");
+                    instance = go.AddComponent<T>();
+                }
+                return instance;
+            }
+        }
+
+        protected virtual void Awake()
+        {
+            if (!Application.isPlaying) return;
+
+            if (autoUnparentOnAwake) transform.SetParent(null);
+
             if (instance == null)
             {
-                var go = new GameObject(typeof(T).Name + " Auto-Generated");
-                instance = go.AddComponent<T>();
+                instance = this as T;
+                DontDestroyOnLoad(gameObject);
             }
-            return instance;
-        }
-    }
-
-    protected virtual void Awake()
-    {
-        if (!Application.isPlaying) return;
-
-        if (autoUnparentOnAwake) transform.SetParent(null);
-
-        if (instance == null)
-        {
-            instance = this as T;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
+            else if (instance != this)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }
