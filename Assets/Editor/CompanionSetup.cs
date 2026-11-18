@@ -57,6 +57,7 @@ public static class CompanionSetup
         Type manager = Find(ns + ".AudioManager");
         Type score = Find(ns + ".ScoreKeeper");
         Type hud = Find(ns + ".LevelHud");
+        Type scoreHud = Find(ns + ".ScoreHud");
 
         string root = ScenesFolder + "/" + folder + "/" + prefix + " - ";
         string bootstrap = root + "Bootstrap.unity";
@@ -75,7 +76,10 @@ public static class CompanionSetup
         BuildLevel(level, hud, shot, prefix + " - Level 2", prefix + " - HUD", manager, score, music, true);
         BuildLevel(level2, hud, shot, prefix + " - Level", prefix + " - HUD", manager, score, music, false);
 
+        // A real HUD, loaded on top of the level -- and it carries its own managers,
+        // the way a scene built on its own side always ends up doing.
         scene = FreshScene(false);
+        new GameObject("ScoreHud").AddComponent(scoreHud);
         AddManagers("Managers (from the HUD scene)", manager, score, music, shot);
         EditorSceneManager.SaveScene(scene, additive);
 

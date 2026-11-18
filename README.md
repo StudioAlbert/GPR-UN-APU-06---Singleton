@@ -45,8 +45,9 @@ actually teaches), `Shared/` (the flash, the IMGUI style, the bootstrap loader) 
   points), *Next level*, *Load the HUD scene on top*, *Reset the score*.
 - **`NN - Level 2`** — the same level, **without the managers**. It is the next level nobody
   equipped, and it is where the session starts.
-- **`NN - HUD`** — nothing but a second `Managers` object, loaded additively. It is the
-  duplicate.
+- **`NN - HUD`** — a real HUD: it prints the score in the top-right corner, and it brings a
+  second `Managers` object along. Loaded additively, it is the duplicate, and the score it
+  prints tells you which manager answered.
 - **`NN - Bootstrap`** — one `Managers` object created before the game, then `NN - Level`. It
   buys nothing until chapter 4: before that, it dies with its own scene.
 
@@ -59,8 +60,9 @@ this project. It is what students do every day, and it is what breaks.
    blames `LevelHud`, which did nothing wrong.
 2. Open `01 - Level`, press Play, shoot — it works — then *Next level* → no more sound, no
    more flash, and the score is back to zero. Both managers went with the scene they lived in.
-3. From `01 - Level`, click *Load the HUD scene on top* → a second `AudioManager` arrives, and
-   the newcomer is the one that dies.
+3. From `01 - Level`, click *Load the HUD scene on top* → the HUD appears in the corner with
+   the right score, but a second `Managers` came with it, and the newcomer is the one that
+   dies. Watch it vanish from the Hierarchy in the same frame it arrived.
 
 The score line in `LevelHud` carries the one null test of the whole project. Without it the HUD
 throws sixty times a second and you never get as far as clicking anything. It is exactly the
@@ -77,8 +79,10 @@ to default to, the manager has no clip to play — and nobody placed them or can
 They also belong to the current scene, so *Next level* throws them away and the next click
 builds new ones. The crash of chapter 1 has become a score that silently restarts at zero.
 
-Failure 3 is still there, and worse: load the HUD scene on top of `02 - Level` and count the
-managers — there are **two**, both alive, and `Instance` is whichever woke up last.
+Failure 3 is still there, and worse: shoot a few times, then load the HUD scene on top of
+`02 - Level`. Both score lines drop to **zero** — the level's panel included — while the points
+are still held by the first `ScoreKeeper`, which nothing reads any more. Count the managers:
+there are **two**, both alive, and `Instance` is whichever woke up last.
 `Singleton<T>` never destroys anything. Change `AudioManager : Singleton<AudioManager>` to
 `RegulatorSingleton<AudioManager>`, load the HUD scene again, and watch the console: now the
 **older** instance is destroyed. The opposite policy from chapter 1, and neither one is wrong —
@@ -92,6 +96,11 @@ flat, the room stays quiet, no error. Then open `03 - Level`: same code, sound a
 included.
 
 The price is on that first run: nothing tells you the service is missing.
+
+The null object answers for the audio, not for the rest: load the HUD scene on top of
+`03 - Level` and the score still drops to zero. `ScoreKeeper` is a plain singleton here, and
+the duplicate bites it exactly as before — an access that never returns `null` is not an
+answer to two instances.
 
 ### Chapter 4 — surviving the scenes
 
