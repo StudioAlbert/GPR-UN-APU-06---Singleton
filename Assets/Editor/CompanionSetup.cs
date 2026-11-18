@@ -4,16 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Builds the four demo scenes from scratch, so the companion can be rebuilt
-/// from source at any time. Run it from the menu, or in batch mode with
+/// Builds the demo scenes from scratch, so the companion can be rebuilt from
+/// source at any time. Run it from the menu, or in batch mode with
 /// -executeMethod CompanionSetup.BuildAll.
 /// </summary>
 public static class CompanionSetup
 {
     private const string ScenesFolder = "Assets/01 - Scenes";
-
-    private const string MusicPath = "Assets/05 - Audio/music.wav";
-    private const string ShotPath = "Assets/05 - Audio/shot.wav";
 
     [MenuItem("Companion/Rebuild the demo scenes")]
     public static void BuildAll()
@@ -23,32 +20,24 @@ public static class CompanionSetup
             AssetDatabase.CreateFolder("Assets", "01 - Scenes");
         }
 
-        AudioClip music = AssetDatabase.LoadAssetAtPath<AudioClip>(MusicPath);
-        AudioClip shot = AssetDatabase.LoadAssetAtPath<AudioClip>(ShotPath);
-
-        BuildBootstrap(music, shot);
+        BuildBootstrap();
         BuildMenu();
-        BuildLevel(shot);
-        BuildHud(music, shot);
+        BuildLevel("Level", "Level 2");
+        BuildLevel("Level 2", "Level");
+        BuildHud();
 
         EditorBuildSettings.scenes = new[]
         {
             new EditorBuildSettingsScene(ScenesFolder + "/Bootstrap.unity", true),
             new EditorBuildSettingsScene(ScenesFolder + "/Menu.unity", true),
             new EditorBuildSettingsScene(ScenesFolder + "/Level.unity", true),
+            new EditorBuildSettingsScene(ScenesFolder + "/Level 2.unity", true),
             new EditorBuildSettingsScene(ScenesFolder + "/HUD.unity", true)
         };
 
-        string sample = "Assets/Scenes/SampleScene.unity";
-        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(sample) != null)
-        {
-            AssetDatabase.DeleteAsset(sample);
-            AssetDatabase.DeleteAsset("Assets/Scenes");
-        }
-
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("CompanionSetup: four scenes written in " + ScenesFolder + ".");
+        Debug.Log("CompanionSetup: five scenes written in " + ScenesFolder + ".");
     }
 
     private static Scene FreshScene(bool withCamera)
@@ -71,36 +60,28 @@ public static class CompanionSetup
         camera.backgroundColor = new Color(0.09f, 0.09f, 0.11f, 1f);
     }
 
-    private static GameObject AddManagers(string name, AudioClip music, AudioClip shot)
+    private static GameObject AddManagers(string name)
     {
         var go = new GameObject(name);
-
-        AudioManager audio = go.AddComponent<AudioManager>();
-        AudioSource source = go.GetComponent<AudioSource>();
-        source.playOnAwake = false;
-        source.volume = 0.5f;
-
-        SetClip(audio, "music", music);
-        SetClip(audio, "shot", shot);
-
+        go.AddComponent<FlashManager>();
         go.AddComponent<ScoreKeeper>();
         return go;
     }
 
-    private static void SetClip(Object target, string field, AudioClip clip)
+    private static void SetString(Object target, string field, string value)
     {
         var serialized = new SerializedObject(target);
         SerializedProperty property = serialized.FindProperty(field);
         if (property == null) return;          // the branch may not carry that field
 
-        property.objectReferenceValue = clip;
+        property.stringValue = value;
         serialized.ApplyModifiedPropertiesWithoutUndo();
     }
 
-    private static void BuildBootstrap(AudioClip music, AudioClip shot)
+    private static void BuildBootstrap()
     {
         Scene scene = FreshScene(true);
-        AddManagers("Managers", music, shot);
+        AddManagers("Managers");
         new GameObject("Bootstrap").AddComponent<BootstrapLoader>();
         EditorSceneManager.SaveScene(scene, ScenesFolder + "/Bootstrap.unity");
     }
@@ -112,18 +93,18 @@ public static class CompanionSetup
         EditorSceneManager.SaveScene(scene, ScenesFolder + "/Menu.unity");
     }
 
-    private static void BuildLevel(AudioClip shot)
+    private static void BuildLevel(string sceneName, string nextScene)
     {
         Scene scene = FreshScene(true);
         LevelHud hud = new GameObject("LevelHud").AddComponent<LevelHud>();
-        SetClip(hud, "shot", shot);
-        EditorSceneManager.SaveScene(scene, ScenesFolder + "/Level.unity");
+        SetString(hud, "nextScene", nextScene);
+        EditorSceneManager.SaveScene(scene, ScenesFolder + "/" + sceneName + ".unity");
     }
 
-    private static void BuildHud(AudioClip music, AudioClip shot)
+    private static void BuildHud()
     {
         Scene scene = FreshScene(false);
-        AddManagers("Managers (from the HUD scene)", music, shot);
+        AddManagers("Managers (from the HUD scene)");
         EditorSceneManager.SaveScene(scene, ScenesFolder + "/HUD.unity");
     }
 }

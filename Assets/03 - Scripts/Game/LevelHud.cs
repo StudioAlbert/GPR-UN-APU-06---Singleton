@@ -4,23 +4,26 @@ using UnityEngine.SceneManagement;
 /// IMGUI on purpose: the demo is about the managers, not about the UI.
 public class LevelHud : MonoBehaviour
 {
-    [SerializeField] private AudioClip shot;
+    [SerializeField] private Color hitColor = new Color(1f, 0.82f, 0.1f);
+    [SerializeField] private string nextScene = "Level 2";
 
     private void OnGUI()
     {
         DemoStyle.Apply();
 
-        GUILayout.BeginArea(new Rect(40, 40, 560, 520));
-        GUILayout.Label("LEVEL");
+        GUILayout.BeginArea(new Rect(40, 40, 560, 560));
+        GUILayout.Label(SceneManager.GetActiveScene().name.ToUpperInvariant());
         GUILayout.Label("Score: " + ScoreKeeper.Instance.Score);
         GUILayout.Space(14);
 
-        if (GUILayout.Button("Shoot", GUILayout.Height(48)))
+        if (GUILayout.Button("Hit", GUILayout.Height(48)))
         {
-            Sound.Current.Play(shot);
+            Feedback.Current.Hit(hitColor);
             ScoreKeeper.Instance.Add(10);
         }
 
+        GUILayout.Space(14);
+        if (GUILayout.Button("Next level", GUILayout.Height(48))) SceneManager.LoadScene(nextScene);
         if (GUILayout.Button("Back to the menu", GUILayout.Height(48))) SceneManager.LoadScene("Menu");
 
         GUILayout.Space(14);

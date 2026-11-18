@@ -36,7 +36,7 @@ public class RegulatorSingleton<T> : MonoBehaviour where T : Component
         InitializationTime = Time.time;
         DontDestroyOnLoad(gameObject);
 
-        foreach (T old in FindObjectsByType<T>(FindObjectsSortMode.None))
+        foreach (T old in FindObjectsByType<T>())
         {
             var regulator = old.GetComponent<RegulatorSingleton<T>>();
             if (regulator != null && regulator.InitializationTime < InitializationTime)
